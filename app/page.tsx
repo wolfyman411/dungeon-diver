@@ -7,7 +7,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="login__body">
+    <div className="container">
       <div className="login__wrapper fade-in">
         <div className="login__header">dungeon diver.</div>
         <div className="login__subtitle">log in / sign up</div>

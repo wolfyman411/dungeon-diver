@@ -7,6 +7,31 @@
 }
 
 /* GLOBALS */
+.container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-color: #dbdbdb;
+    overflow-y: hidden;
+}
+
+.page {
+    width: 80%;
+    height: 100%;
+    background-color: white;
+    margin: 0 auto;
+    border: solid black;
+    border-color: black;
+}
+
+.red {
+    color: #FF0000;
+}
+
+.blue {
+    color: #639ff8;
+}
+
 .btn {
     color: white;
     background-color: #639ff8;
@@ -41,13 +66,6 @@
 }
 
 /* LOGIN PAGE */
-
-.login__body {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    background-color: #dbdbdb;
-}
 
 .login__wrapper {
     display: flex;
@@ -88,4 +106,72 @@
 
 .login__form--input::placeholder {
     color: #dbdbdb;
+}
+
+/* CHARACTER MAKER */
+
+.character__section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.character__wrapper {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 80px;
+}
+
+.character__header {
+    font-size: 48px;
+    text-align: center;
+    padding-bottom: 24px;
+}
+
+.class__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    gap: 48px;
+}
+
+.class__button--wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform ease 0.3s;
+    cursor: pointer;
+}
+
+.class__button--wrapper:hover {
+    transform: scale(1.05);
+}
+
+.class__button--wrapper:active {
+    transform: scale(1.0) translateY(2px);
+    filter: brightness(0.9);
+}
+
+.class__name {
+    font-size: 18px;
+}
+
+.class__button--wrapper .box {
+    padding: 6px 6px;
+    background-color: #d9d9d9;
+    margin: 0 auto;
+    border: black 2px solid;
+}
+
+.character__section .btn {
+    width: 80%;
+}
+
+.class__desc {
+    max-width: 150px;
 }
