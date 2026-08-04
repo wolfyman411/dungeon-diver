@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+* {
+    font-family: 'Itim', cursive;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* GLOBALS */
+.btn {
+    color: white;
+    background-color: #639ff8;
+    width: 80%;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    transition: background-color 0.1s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+    background-color: #5080c9;
+}
+
+.btn:active {
+    background-color: #3f5a8c;
+    transform: translateY(2px);
+}
+
+.fade-in {
+    animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* LOGIN PAGE */
+
+.login__body {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-color: #dbdbdb;
+}
+
+.login__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login__header {
+    font-size: 48px;
+    text-align: center;
+}
+
+.login__subtitle {
+    font-size: 24px;
+    text-align: center;
+}
+
+.login__form--wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.login__form--input {
+    text-align: center;
+    width: 80%;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 16px;
+    
+}
+
+.login__form--input::placeholder {
+    color: #dbdbdb;
+}
