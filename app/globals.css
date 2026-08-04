@@ -168,10 +168,34 @@
     border: black 2px solid;
 }
 
-.character__section .btn {
+.character__section .btn, .info__section .btn {
     width: 80%;
+    font-size: 24px;
 }
 
 .class__desc {
     max-width: 150px;
+}
+
+/* INFO */
+
+.info__text {
+    font-size: 24px;
+    text-align: center;
+    padding-bottom: 48px;
+    max-width: 460px;
+}
+
+.info__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.info__section {
+    width: 300px;
+    display: flex;
+    justify-content: center;
 }
