@@ -8,7 +8,7 @@ import EnemyIcon from './EnemyIcon'
 
 export default function page() {
 
-  const [inCombat, setInCombat] = useState(true)
+  const [inCombat, setInCombat] = useState(false)
 
   function getHTML() {
     if (!inCombat) {

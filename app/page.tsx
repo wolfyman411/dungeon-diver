@@ -1,8 +1,7 @@
 "use client";
-import { Character } from "@/classes/character";
-import { auth, db } from "@/firebase/firebase";
-import { signInWithCredential, UserCredential } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { db } from "@/firebase/firebase";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -10,6 +9,8 @@ export default function Home() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
+
+  const navigator = useRouter()
 
   useEffect(() => {
   }, []);
@@ -33,9 +34,9 @@ export default function Home() {
         const userDoc = querySnapshot.docs[0]
         const userData = userDoc.data()
 
-        try {
-          const userCredential = await signInWithCredential(auth,{username,password})
-        } catch (e) {
+        if (userData.password === password) {
+          navigator.push("/map")
+        } else {
           setErrorMessage("Login failed.")
         }
       }
@@ -43,10 +44,8 @@ export default function Home() {
       // Sign Up
       else {
         try {
-          const userCredential:UserCredential = null
-          const user = userCredential.user
-          const characterRef = await setDoc(doc(db,"character"), {
-            character_id:user.uid,
+
+          const characterRef = await addDoc(collection(db,"character"), {
             class: "",
             hp: "",
             magic:0,
@@ -56,9 +55,13 @@ export default function Home() {
             xp:0,
           })
 
-          await setDoc(doc(db,"users",user.uid), {
-            username: username
+          const user = await addDoc(collection(db,"users"), {
+            username: username,
+            password: password,
+            character_id:characterRef.id
           })
+
+          navigator.push("/character")
         }
         catch (e) {
           setErrorMessage("Sign up failed.")
