@@ -23,7 +23,6 @@ export default function page() {
   },[user,character])
 
   function logicCheck() {
-    console.log(character)
     if (!user.id) {
         navigator.push("/")
     }

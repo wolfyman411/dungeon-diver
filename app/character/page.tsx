@@ -1,7 +1,13 @@
 "use client"
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ClassButton from './ClassButton'
+import { User } from '@/classes/user';
+import { Character } from '@/classes/character';
+import { useBoundStore } from '@/zustand/zustand';
+import { useRouter } from 'next/navigation';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/firebase/firebase';
 
 export default function page() {
 
@@ -9,6 +15,27 @@ export default function page() {
   
   const [errorMessage,setErrorMessage] = useState("")
   const [chosenClass,setChosenClass] = useState("")
+
+  const user:User = useBoundStore((state:any) => state.user)
+  const character:Character = useBoundStore((state:any) => state.character)
+  const setCharacter = useBoundStore((state:any) => state.setCharacter)
+  
+  const navigator = useRouter()
+
+  useEffect(() => {
+    logicCheck()
+  },[user,character])
+
+  function logicCheck() {
+    if (!user.id) {
+        navigator.push("/")
+    }
+
+    if (character.class !== "") {
+        navigator.push("/map")
+    }
+  }
+  
 
   function updateSelection(selectedClass="") {
 
@@ -41,13 +68,28 @@ export default function page() {
     setChosenClass(selectedClass)
   }
 
-  function beginGame() {
+  async function beginGame() {
     if (chosenClass === "") {
       setErrorMessage("Please select a class.")
       return
     }
+    else {
 
-    
+      try {
+
+        const docRef = doc(db,"character",character.id)
+        setDoc(docRef,{class:chosenClass}, {merge:true})
+
+        const newCharacter = character
+        newCharacter.class = chosenClass
+        setCharacter(newCharacter)
+
+        navigator.push("/map")
+
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 
   return (
@@ -65,7 +107,7 @@ export default function page() {
             </div>
             <div className="character__section">
                 <div className="character__header">Enter the world.</div>
-                <button className='btn'>Play</button>
+                <button className='btn' onClick={beginGame}>Play</button>
             </div>
         </div>
       </div>
