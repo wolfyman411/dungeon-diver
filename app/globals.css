@@ -199,3 +199,62 @@
     display: flex;
     justify-content: center;
 }
+
+/* MAP */
+
+.map__header {
+    position: absolute;
+    padding: 24px;
+}
+
+.map__header__text {
+    font-size: 32;
+}
+
+.map__wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+}
+
+.character_stats {
+    border: black 2px solid;
+    width: 30%;
+}
+
+.map__container {
+    background-color: #dbdbdb;
+    width: 70%;
+    position: relative;
+}
+
+.map__icon--wrapper, .map__icon--path {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    aspect-ratio: auto;
+}
+
+.map__icon--wrapper {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.map__icon--wrapper:hover {
+    transform: scale(1.05);
+}
+
+.map__text {
+    text-align: center;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+.map__icons--wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
