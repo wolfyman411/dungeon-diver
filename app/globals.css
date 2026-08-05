@@ -28,6 +28,10 @@
     color: #FF0000;
 }
 
+.red.btn {
+    background-color: #FF0000;
+}
+
 .blue {
     color: #639ff8;
 }
@@ -45,6 +49,14 @@
 
 .btn:hover {
     background-color: #5080c9;
+}
+
+.red.btn:hover {
+    background-color: #e40000;
+}
+
+.red.btn:active {
+    background-color: #af0000;
 }
 
 .btn:active {
@@ -217,9 +229,85 @@
     display: flex;
 }
 
-.character_stats {
+.character__stats {
     border: black 2px solid;
     width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+
+.character__info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.character__desc--wrapper {
+    text-align: center;
+}
+
+.character__desc--username {
+    font-size: 18px;
+}
+
+.character__desc--class {
+    font-size: 12px;
+    color: #DBDBDB;
+}
+
+.character__portrait .box {
+    padding: 6px 6px;
+    background-color: #d9d9d9;
+    margin: 0 auto;
+    border: black 2px solid;
+}
+
+.character__core {
+    font-size: 18px;
+}
+
+.character__skills {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: space-between;
+}
+
+.character__stats .btn {
+    text-align: center;
+}
+
+.skill__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    font-size: 18px;
+}
+
+.skill__cost {
+    color: #dbdbdb;
+}
+
+.skill__button {
+    background-color: #d9d9d9;
+    border: black solid 2px;
+    padding: 0px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.skill__button:hover {
+    transform: scale(1.05);
+}
+
+.skill__button:active {
+    transform: scale(1.0);
 }
 
 .map__container {
