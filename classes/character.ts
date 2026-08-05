@@ -7,8 +7,8 @@ export class Character {
     muscle: number;
     wins: number;
     xp: number;
-    world_completion: Map<string, number>;
-    constructor(className: string, hp: number, magic: number, moxie: number, muscle: number, wins: number, xp: number, world_completion: Map<string, number>) {
+    world_completion: Map<string, number> = new Map();
+    constructor(className: string, hp: number, magic: number, moxie: number, muscle: number, wins: number, xp: number) {
         this.class = className;
         this.hp = hp;
         this.magic = magic;
@@ -16,6 +16,5 @@ export class Character {
         this.muscle = muscle;
         this.wins = wins;
         this.xp = xp;
-        this.world_completion = world_completion;
     }
 }
