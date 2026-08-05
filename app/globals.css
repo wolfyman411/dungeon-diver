@@ -160,6 +160,23 @@
     cursor: pointer;
 }
 
+.class__button--wrapper.selected {
+    transform: scale(1.2);
+}
+
+.class__button--wrapper.selected .box{
+    background-color: #ebee47;
+}
+
+.class__button--wrapper.selected:hover {
+    transform: scale(1.15);
+}
+
+.class__button--wrapper.selected:active {
+    transform: scale(0.9) translateY(2px);
+    filter: brightness(0.9);
+}
+
 .class__button--wrapper:hover {
     transform: scale(1.05);
 }
