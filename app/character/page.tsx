@@ -82,6 +82,20 @@ export default function page() {
 
         const newCharacter = character
         newCharacter.class = chosenClass
+        newCharacter.muscle = 1
+        newCharacter.magic = 1
+        newCharacter.moxie = 1
+
+        if (chosenClass=== "Warrior") {
+          newCharacter.muscle = 3
+        }
+        else if (chosenClass=== "Mage") {
+          newCharacter.magic = 3
+        }
+        else if (chosenClass=== "Ranger") {
+          newCharacter.moxie = 3
+        }
+
         setCharacter(newCharacter)
 
         navigator.push("/map")
