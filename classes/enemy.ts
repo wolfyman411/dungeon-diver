@@ -4,6 +4,7 @@ export class Enemy {
     enemy_icon: string;
     enemy_name: string;
     hp: number;
+    currentHP: number = 0;
     magic: number;
     moxie: number;
     muscle: number;
@@ -17,6 +18,7 @@ export class Enemy {
         this.moxie = moxie;
         this.muscle = muscle;
         this.reward = reward;
+        this.currentHP = hp;
     }
 }
 
@@ -27,6 +29,7 @@ export const EnemyConverter = {
             enemy_icon: enemy.enemy_icon,
             enemy_name: enemy.enemy_name,
             hp: enemy.hp,
+            currentHP: enemy.currentHP,
             magic: enemy.magic,
             moxie: enemy.moxie,
             muscle: enemy.muscle,
