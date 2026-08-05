@@ -1,14 +1,37 @@
 "use client"
 
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MapIcon from './MapIcon'
 import CharacterTab from '../components/CharacterTab'
 import EnemyIcon from './EnemyIcon'
+import { useBoundStore } from '@/zustand/zustand'
+import { User } from '@/classes/user'
+import { useRouter } from 'next/navigation'
+import { Character } from '@/classes/character'
 
 export default function page() {
 
   const [inCombat, setInCombat] = useState(false)
+  const user:User = useBoundStore((state:any) => state.user)
+  const character:Character = useBoundStore((state:any) => state.character)
+  
+  const navigator = useRouter()
+
+  useEffect(() => {
+    logicCheck()
+  },[user,character])
+
+  function logicCheck() {
+    console.log(character)
+    if (!user.id) {
+        navigator.push("/")
+    }
+
+    if (character.class === "") {
+        navigator.push("/character")
+    }
+  }
 
   function getHTML() {
     if (!inCombat) {

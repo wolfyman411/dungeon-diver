@@ -45,6 +45,7 @@
     padding: 8px;
     cursor: pointer;
     transition: background-color 0.1s ease, transform 0.1s ease;
+    text-align: center;
 }
 
 .btn:hover {
@@ -329,10 +330,6 @@
     flex-direction: column;
     gap: 24px;
     justify-content: space-between;
-}
-
-.character__stats .btn {
-    text-align: center;
 }
 
 .skill__wrapper {

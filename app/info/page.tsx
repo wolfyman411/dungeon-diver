@@ -1,6 +1,25 @@
-import React from 'react'
+"use client"
+
+import { User } from '@/classes/user'
+import { useBoundStore } from '@/zustand/zustand'
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
 
 export default function page() {
+
+  const user:User = useBoundStore((state:any) => state.user)
+  const navigator = useRouter()
+
+  useEffect(() => {
+    logicCheck()
+  },[])
+
+  function logicCheck() {
+    if (!user.id) {
+        navigator.push("/")
+    }
+  }
+
   return (
     <div className='container'>
       <div className="page">
