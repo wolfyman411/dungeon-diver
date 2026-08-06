@@ -22,6 +22,10 @@ export default function CharacterTab() {
     }
   }
 
+  function calculateXPCost(value = 0) {
+    return value * 15
+  }
+
   return (
     <div className="character__stats">
         <div className="character__info">
@@ -37,24 +41,24 @@ export default function CharacterTab() {
         </div>
         <div className="character__info">
             <div className="character__core">
-                HP: {character.hp || 0}/{character.hp || 0}
+                HP: {character.hp || 0}/{character.class && character.getLevel() || 0}
                 XP: {character.xp || 0}
             </div>
         </div>
         <div className="character__skills">
             <div className="skill__wrapper">
                 <div className="skill__name">Muscle: {character.muscle || 0}</div>
-                <div className="skill__cost">200 XP</div>
+                <div className="skill__cost">{calculateXPCost(character.muscle || 0)} XP</div>
                 <div className="skill__button">+</div>
             </div>
             <div className="skill__wrapper">
                 <div className="skill__name">Magic: {character.magic || 0}</div>
-                <div className="skill__cost">200 XP</div>
+                <div className="skill__cost">{calculateXPCost(character.magic || 0)} XP</div>
                 <div className="skill__button">+</div>
             </div>
             <div className="skill__wrapper">
                 <div className="skill__name">Moxie: {character.moxie || 0}</div>
-                <div className="skill__cost">200 XP</div>
+                <div className="skill__cost">{calculateXPCost(character.moxie || 0)} XP</div>
                 <div className="skill__button">+</div>
             </div>
         </div>

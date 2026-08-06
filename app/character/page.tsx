@@ -77,14 +77,12 @@ export default function page() {
 
       try {
 
-        const docRef = doc(db,"character",character.id)
-        setDoc(docRef,{class:chosenClass}, {merge:true})
-
         const newCharacter = character
         newCharacter.class = chosenClass
         newCharacter.muscle = 1
         newCharacter.magic = 1
         newCharacter.moxie = 1
+        newCharacter.hp = 5
 
         if (chosenClass=== "Warrior") {
           newCharacter.muscle = 3
@@ -97,6 +95,8 @@ export default function page() {
         }
 
         setCharacter(newCharacter)
+        const docRef = doc(db,"character",character.id)
+        setDoc(docRef,{class:chosenClass, muscle:newCharacter.muscle, magic:newCharacter.magic, moxie:newCharacter.moxie, hp:newCharacter.hp}, {merge:true})
 
         navigator.push("/map")
 

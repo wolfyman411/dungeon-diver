@@ -7,7 +7,7 @@ export class Character {
     muscle: number;
     wins: number;
     xp: number;
-    world_completion: Map<string, number> = new Map();
+    world_completion: Array<{id: string, progress: number}> = new Array()
     constructor(className: string, hp: number, magic: number, moxie: number, muscle: number, wins: number, xp: number) {
         this.class = className;
         this.hp = hp;

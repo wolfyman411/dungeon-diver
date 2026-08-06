@@ -1,28 +1,67 @@
-import Image from 'next/image'
-import React from 'react'
+import { db } from '@/firebase/firebase'
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
+import React, { useEffect, useState } from 'react'
 
-export default function MapIcon({location_name = "", challenge_progress = 0, challenges = 10, icon ="", accessible = true, style={}}) {
+type Props = {
+  location_img?: string
+  location_id?: string
+  style?: React.CSSProperties
+  progress?: number
+}
+
+type LocalLocation = {
+  location_name: string
+  challenges: number
+  required_locations: string[]
+}
+
+export default function MapIcon({ location_img = "", location_id = '', style = {}, progress = 0 }: Props) {
+
+  const [locationData, setLocationData] = useState<LocalLocation>({
+    location_name: 'Unknown',
+    challenges: 1,
+    required_locations: []
+  })
+
+  const [accessible,setAccessible] = useState(true)
+
+
+  useEffect(() => {
+    getLocationData()
+  },[])
+
+
+  async function getLocationData() {
+
+    try {
+      const docRef = doc(db,"locations",location_id)
+      const docData = (await getDoc(docRef)).data()
+
+      if (!docData) {
+        return
+      }
+
+      setLocationData({
+        location_name: docData.location_name,
+        challenges: docData.challenges,
+        required_locations: docData.required_locations
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   function getDisplay() {
-    if (accessible) {
-        if (challenge_progress >= challenges) {
-            return "[Completed]"
-        }
-        else {
-            return "[Uncompleted]"
-        }
-    }
-    else {
-        return "[Inaccessible]"
-    }
+    if (accessible) return '[Inaccessible]'
+    return progress >= locationData.challenges ? '[Completed]' : '[Uncompleted]'
   }
 
   return (
     <div className='map__icon--wrapper' style={style}>
-      <img src={`/mapicons/${icon}`} alt={location_name} />
-      <div className="map__text">{location_name}</div>
+      <img src={`/mapicons/${location_img}`} alt={locationData.location_name || ""} />
+      <div className="map__text">{locationData.location_name || ""}</div>
       <div className="map__text">{getDisplay()}</div>
-      <div className="map__text">{challenge_progress}/{challenges}</div>
+      <div className="map__text">{progress}/{locationData.challenges || ""}</div>
     </div>
   )
 }
