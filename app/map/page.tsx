@@ -24,7 +24,7 @@ export default function page() {
   const navigator = useRouter()
 
   useEffect(() => {
-    console.log(character.world_completion)
+    console.log(character)
     logicCheck()
     updateMapInfo()
   },[user,character])

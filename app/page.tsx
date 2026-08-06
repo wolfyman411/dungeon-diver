@@ -100,6 +100,7 @@ export default function Home() {
       const characterData = docSnap.data()
       const newCharacter = new Character(characterData.class,characterData.hp,characterData.magic,characterData.moxie,characterData.muscle,characterData.wins,characterData.xp)
       newCharacter.id = character_id
+      newCharacter.world_completion = characterData.world_completion
       setCharacter(newCharacter)
     }
     else {
