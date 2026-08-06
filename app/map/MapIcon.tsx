@@ -1,6 +1,14 @@
 import { db } from '@/firebase/firebase'
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
+
+type Props = {
+  location_img: string,
+  location_id: string,
+  style: React.CSSProperties,
+  completion_map: Array<{id: string, progress: number}>,
+  startCombat: (param:any) => void
+}
 
 type LocalLocation = {
   location_name: string
@@ -8,7 +16,7 @@ type LocalLocation = {
   required_locations: string[]
 }
 
-export default function MapIcon({ location_img = "", location_id = '', style = {}, completion_map = [] }) {
+export default function MapIcon({ location_img = "", location_id = '', style = {}, completion_map = [], startCombat}:Props) {
 
   const [locationData, setLocationData] = useState<LocalLocation>({
     location_name: 'Unknown',
@@ -45,7 +53,7 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
         continue
       }
 
-      const completionReference = completion_map.find((i: { id: string; progress: number }) => i.id === item) || 0
+      const completionReference = completion_map.find((i) => i.id === item)?.progress || 0
       // If at least one is beaten, then it may pass
       if (completionReference >= docData.challenges) {
         setAccessible(true)
@@ -76,7 +84,7 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
   }
 
   function getProgress() {
-    const locationCompletion = completion_map.find((item: { id: string; progress: number }) => item.id === location_id) || 0
+    const locationCompletion = completion_map.find((item) => item.id === location_id)?.progress || 0
     setProgress(locationCompletion)
   }
 
@@ -86,7 +94,7 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
   }
 
   return (
-    <div className='map__icon--wrapper' style={style}>
+    <div className={`map__icon--wrapper ${!accessible && "inaccessible"}`} style={style} onClick={() => accessible && (startCombat(location_id))}>
       <img src={`/mapicons/${location_img}`} alt={locationData.location_name || ""} />
       <div className="map__text">{locationData.location_name || ""}</div>
       <div className="map__text">{getDisplay()}</div>

@@ -53,11 +53,11 @@
 }
 
 .red.btn:hover {
-    background-color: #e40000;
+    background-color: #b80000;
 }
 
 .red.btn:active {
-    background-color: #af0000;
+    background-color: #880000;
 }
 
 .btn:active {
@@ -266,8 +266,21 @@
     cursor: pointer;
 }
 
+.map__icon--wrapper.inaccessible {
+    cursor: not-allowed;
+    filter: opacity(0.4);
+}
+
 .map__icon--wrapper:hover {
     transform: scale(1.05);
+}
+
+.map__icon--wrapper:active {
+    transform: scale(1.00);
+}
+
+.map__icon--wrapper.inaccessible:hover {
+    transform: scale(1.00);
 }
 
 .map__text {

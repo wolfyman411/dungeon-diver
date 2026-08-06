@@ -20,6 +20,15 @@ export class Enemy {
         this.reward = reward;
         this.currentHP = hp;
     }
+
+    levelUp(rating:number) {
+        this.hp = Math.floor(this.hp*rating)
+        this.currentHP = this.hp
+        this.muscle = Math.floor(this.muscle*rating)
+        this.magic = Math.floor(this.magic*rating)
+        this.moxie = Math.floor(this.moxie*rating)
+        this.reward = Math.floor(this.reward*rating)
+    }
 }
 
 export const EnemyConverter = {
@@ -36,8 +45,8 @@ export const EnemyConverter = {
             reward: enemy.reward
         }
     },
-    fromFirebase: (snapshot: any, options: any) => {
-        const data = snapshot.data(options);
+    fromFirebase: (snapshot: any) => {
+        const data = snapshot.data();
         return new Enemy(
             data.death_note,
             data.enemy_icon,

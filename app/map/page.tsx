@@ -11,10 +11,12 @@ import { useRouter } from 'next/navigation'
 import { Character } from '@/classes/character'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
+import CombatEncounter from './CombatEncounter'
 
 export default function page() {
 
   const [inCombat, setInCombat] = useState(false)
+  const [selectedLocation, setSelectedLocation] = useState("")
   const user:User = useBoundStore((state:any) => state.user)
   const character:Character = useBoundStore((state:any) => state.character)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
@@ -25,6 +27,11 @@ export default function page() {
     logicCheck()
     updateMapInfo()
   },[user,character])
+
+  function startCombat(location_id = "") {
+    setInCombat(true)
+    setSelectedLocation(location_id)
+  }
 
   async function updateMapInfo() {
     if (!user.character_id || !character.class) {
@@ -75,11 +82,11 @@ export default function page() {
     return (
         <div className="map__container">
             <div className="map__icons--wrapper">
-                <MapIcon style={{left:"16%", bottom:"10%"}} location_img="Norm.svg" location_id={"6rLKOYGrkkM1jhVhzCWl"} completion_map={character.world_completion}/>
-                <MapIcon style={{left:"24%", bottom:"42%"}} location_img="Grotto.svg" location_id={"67Uyu2sPLm8dI7OsgKCd"} completion_map={character.world_completion}/>
-                <MapIcon style={{left:"40%", bottom:"24%"}} location_img="Swamp.svg" location_id={"Petks536iahPkO5wWD2L"} completion_map={character.world_completion}/>
-                <MapIcon style={{}} location_img="Walls.svg" location_id={"J6MvGJY9sdzZu9zD5JhA"} completion_map={character.world_completion}/>
-                <MapIcon style={{left:"62%", bottom:"66%"}} location_img="Fortress.svg" location_id={"Rw4dI8JsQXkZiH7eFPqZ"} completion_map={character.world_completion}/>
+                <MapIcon style={{left:"16%", bottom:"10%"}} location_img="Norm.svg" location_id={"6rLKOYGrkkM1jhVhzCWl"} completion_map={character.world_completion} startCombat={startCombat}/>
+                <MapIcon style={{left:"24%", bottom:"42%"}} location_img="Grotto.svg" location_id={"67Uyu2sPLm8dI7OsgKCd"} completion_map={character.world_completion} startCombat={startCombat}/>
+                <MapIcon style={{left:"40%", bottom:"24%"}} location_img="Swamp.svg" location_id={"Petks536iahPkO5wWD2L"} completion_map={character.world_completion} startCombat={startCombat}/>
+                <MapIcon style={{}} location_img="Walls.svg" location_id={"J6MvGJY9sdzZu9zD5JhA"} completion_map={character.world_completion} startCombat={startCombat}/>
+                <MapIcon style={{left:"62%", bottom:"66%"}} location_img="Fortress.svg" location_id={"Rw4dI8JsQXkZiH7eFPqZ"} completion_map={character.world_completion} startCombat={startCombat}/>
                 <img style={{left:"20%", bottom:"22%"}} src={"/mapicons/Norm-Grotto.svg"} className='map__icon--path'/>
                 <img style={{left:"26%", bottom:"18%"}} src={"/mapicons/Norm-Swamp.svg"} className='map__icon--path'/>
                 <img style={{left:"48%", bottom:"36%"}} src={"/mapicons/Swamp-Walls.svg"} className='map__icon--path'/>
@@ -92,11 +99,7 @@ export default function page() {
 
   function combatHTML() {
     return (
-        <div className="combat__container">
-            <EnemyIcon/>
-            <EnemyIcon/>
-            <EnemyIcon/>
-        </div>
+        <CombatEncounter location_id={selectedLocation}/>
     )
   }
 
