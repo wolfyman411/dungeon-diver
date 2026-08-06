@@ -4,29 +4,32 @@ import { useBoundStore } from '@/zustand/zustand'
 import React from 'react'
 
 interface props {
-    enemy: Enemy
+  enemy: Enemy
+  nextRound: (param:any, param2:any) => void
 }
 
-export default function EnemyIcon({enemy}:props) {
+export default function EnemyIcon({enemy, nextRound}:props) {
 
   const character:Character = useBoundStore((state:any) => state.character)
 
   function displayAttack() {
-    let damageAmount = 0
+
+    if (!enemy) {
+      return
+    }
+
     let damageType = ""
-    if (enemy.muscle > enemy.magic && enemy.muscle > enemy.moxie) {
-      damageAmount = Math.max(enemy.muscle - character.muscle,0)
+    const highestStat = enemy.highestStat()
+    if (highestStat.type === "muscle") {
       damageType = "physical"
     }
-    else if (enemy.magic > enemy.muscle && enemy.magic > enemy.moxie) {
-      damageAmount = Math.max(enemy.magic - character.magic,0)
+    else if (highestStat.type === "magic") {
       damageType = "magic"
     }
     else {
-      damageAmount = Math.max(enemy.moxie - character.moxie,0)
       damageType = "ranged"
     }
-    return `${damageAmount} ${damageType}`
+    return `${character.getDamage(highestStat.type,highestStat.amount)} ${damageType}`
   }
 
   function displayDamage() {
@@ -47,7 +50,7 @@ export default function EnemyIcon({enemy}:props) {
         <img src={`/enemies/${enemy?.enemy_icon}`} alt="" />
         <div className="enemy__info">HP:{enemy?.currentHP}/{enemy?.hp}</div>
         <div className="enemy__info">Will deal <span className='red'>{displayAttack()} damage</span> next turn.</div>
-        <div className="btn red">Attack - {displayDamage()} Damage</div>
+        <div className="btn red" onClick={() => nextRound(enemy,displayDamage())}>Attack - {displayDamage()} Damage</div>
     </div>
   )
 }

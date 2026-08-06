@@ -21,6 +21,11 @@ export class Enemy {
         this.currentHP = hp;
     }
 
+    clone():Enemy {
+        const cloned = new Enemy(this.death_note, this.enemy_icon, this.enemy_name, this.hp, this.magic, this.moxie, this.muscle, this.reward)
+        return cloned
+    }
+
     levelUp(rating:number) {
         this.hp = Math.floor(this.hp*rating)
         this.currentHP = this.hp
@@ -28,6 +33,18 @@ export class Enemy {
         this.magic = Math.floor(this.magic*rating)
         this.moxie = Math.floor(this.moxie*rating)
         this.reward = Math.floor(this.reward*rating)
+    }
+
+    highestStat():{type:string,amount:number} {
+        if (this.muscle > this.magic && this.muscle > this.moxie) {
+            return {type:"muscle",amount:this.muscle}
+        }
+        else if (this.magic > this.muscle && this.magic > this.moxie) {
+            return {type:"magic",amount:this.magic}
+        }
+        else {
+            return {type:"moxie",amount:this.moxie}
+        }
     }
 }
 

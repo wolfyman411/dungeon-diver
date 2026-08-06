@@ -22,6 +22,18 @@ export class Character {
         return this.moxie + this.muscle + this.magic
     }
 
+    getDamage(type:string, amount:number): number {
+        if (type === "muscle") {
+            return Math.max(amount - this.muscle,0)
+        }
+        else if (type === "magic") {
+            return Math.max(amount - this.magic,0)
+        }
+        else {
+            return Math.max(amount - this.moxie,0)
+        }
+    }
+
     getRank(): string {
         const level = this.getLevel()
         if(this.class === "Warrior") {

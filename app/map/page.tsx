@@ -99,7 +99,7 @@ export default function page() {
 
   function combatHTML() {
     return (
-        <CombatEncounter location_id={selectedLocation}/>
+        <CombatEncounter location_id={selectedLocation} setCombat={setInCombat}/>
     )
   }
 
