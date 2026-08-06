@@ -18,6 +18,22 @@ export class Character {
         this.xp = xp;
     }
 
+    clone(id:string, world_completion: Array<{id: string, progress: number}>):Character {
+        const clone = new Character(
+            this.class,
+            this.hp,
+            this.magic,
+            this.moxie,
+            this.muscle,
+            this.wins,
+            this.xp
+        )
+        clone.id = id
+        clone.world_completion = world_completion
+
+        return clone
+    }
+
     getLevel(): number {
         return this.moxie + this.muscle + this.magic
     }

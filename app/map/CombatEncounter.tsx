@@ -9,13 +9,15 @@ import { useBoundStore } from '@/zustand/zustand'
 interface props {
     location_id:string,
     setCombat: (param:any) => void
+    completion_map: Array<{id: string, progress: number}>,
 }
 
-export default function CombatEncounter({location_id = "", setCombat}:props) {
+export default function CombatEncounter({location_id = "", setCombat, completion_map}:props) {
 
   const [enemies,setEnemies] = useState<Enemy[]>([])
   const [loading,setLoading] = useState(true)
   const [failReward,setFailReward] = useState(15)
+  const [locationData,setLocationData] = useState({})
   const character:Character = useBoundStore((state:any) => state.character)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
 
@@ -24,12 +26,13 @@ export default function CombatEncounter({location_id = "", setCombat}:props) {
   },[])
 
   function nextRound(targetedEnemy:Enemy, damage:number) {
+    const newCharacter = character.clone(character.id,character.world_completion)
 
     // First the player will attack the enemy
     targetedEnemy.currentHP -= damage
     // If the enemy is dead, give the player some XP
     if (targetedEnemy.currentHP <= 0) {
-        character.xp += targetedEnemy.reward
+        newCharacter.xp += targetedEnemy.reward
     }
 
     // Next all the enemies will attack the player (going from left to right)
@@ -37,10 +40,7 @@ export default function CombatEncounter({location_id = "", setCombat}:props) {
         // Check if the enemy is alive, if so attack
         if (enemies[i].currentHP > 0) {
             const highestStat = enemies[i].highestStat()
-            const newCharacter = character
-            newCharacter.hp -= character.getDamage(highestStat.type,highestStat.amount)
-            setCharacter(newCharacter)
-            console.log(newCharacter.hp)
+            newCharacter.hp -= newCharacter.getDamage(highestStat.type,highestStat.amount)
         }
     }
 
@@ -49,18 +49,28 @@ export default function CombatEncounter({location_id = "", setCombat}:props) {
     setEnemies(refArray)
 
     // If the player is dead, end combat and boot them back to the map. Give 15XP plus the difficulty
-    if (character.hp <= 0) {
-        character.hp = character.getLevel()
-        character.xp += failReward
+    if (newCharacter.hp <= 0) {
+        newCharacter.hp = newCharacter.getLevel()
+        newCharacter.xp += failReward
+        setCharacter(newCharacter)
         setCombat(false)
+        return
     }
 
-    // If all enemies are dead, end combat and heal player
+    // If all enemies are dead, end combat, heal player, and increase the completion (if not maxed)
     if (refArray.length <= 0) {
-        console.log(refArray.length)
-        character.hp = character.getLevel()
+        const ref = completion_map.find((item) => item.id === location_id);
+        if (ref) {
+            ref.progress += 1;
+        }
+        newCharacter.hp = newCharacter.getLevel()
+        setCharacter(newCharacter)
         setCombat(false)
+        console.log(completion_map)
+        return
     }
+
+    setCharacter(newCharacter)
   }
 
   async function startCombat() {
@@ -73,6 +83,7 @@ export default function CombatEncounter({location_id = "", setCombat}:props) {
     // Then grab enemy data
     const whitelist:Enemy[] = []
     if (docData) {
+        setLocationData(docData)
 
         const difficultyRating = docData.challenge + character.wins
         // Update fail reward

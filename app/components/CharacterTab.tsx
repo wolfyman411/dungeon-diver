@@ -8,6 +8,7 @@ export default function CharacterTab() {
 
   const character:Character = useBoundStore((state:any) => state.character)
   const user:User = useBoundStore((state:any) => state.user)
+  const setCharacter = useBoundStore((state:any) => state.setCharacter)
 
   function getCharacterArt() {
 
@@ -24,6 +25,29 @@ export default function CharacterTab() {
 
   function calculateXPCost(value = 0) {
     return value * 15
+  }
+
+  function purchaseSkill(type = "", cost = 0) {
+
+    // Check if we can afford it
+    if (cost <= character.xp) {
+
+        const newCharacter = character.clone(character.id,character.world_completion)
+        newCharacter.xp -= cost
+
+        // If so, remove the xp from our character and add a skill based on whatever we chose
+        if (type === "muscle") {
+            newCharacter.muscle += 1
+        }
+        else if (type === "magic") {
+            newCharacter.magic += 1
+        }
+        else {
+            newCharacter.moxie += 1
+        }
+
+        setCharacter(newCharacter)
+    }
   }
 
   return (
@@ -46,17 +70,17 @@ export default function CharacterTab() {
             </div>
         </div>
         <div className="character__skills">
-            <div className="skill__wrapper">
+            <div className="skill__wrapper" onClick={() => purchaseSkill("muscle",calculateXPCost(character.muscle || 0))}>
                 <div className="skill__name">Muscle: {character.muscle || 0}</div>
                 <div className="skill__cost">{calculateXPCost(character.muscle || 0)} XP</div>
                 <div className="skill__button">+</div>
             </div>
-            <div className="skill__wrapper">
+            <div className="skill__wrapper" onClick={() => purchaseSkill("magic",calculateXPCost(character.magic || 0))}>
                 <div className="skill__name">Magic: {character.magic || 0}</div>
                 <div className="skill__cost">{calculateXPCost(character.magic || 0)} XP</div>
                 <div className="skill__button">+</div>
             </div>
-            <div className="skill__wrapper">
+            <div className="skill__wrapper" onClick={() => purchaseSkill("moxie",calculateXPCost(character.moxie || 0))}>
                 <div className="skill__name">Moxie: {character.moxie || 0}</div>
                 <div className="skill__cost">{calculateXPCost(character.moxie || 0)} XP</div>
                 <div className="skill__button">+</div>

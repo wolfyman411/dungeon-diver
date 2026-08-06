@@ -24,6 +24,7 @@ export default function page() {
   const navigator = useRouter()
 
   useEffect(() => {
+    console.log(character.world_completion)
     logicCheck()
     updateMapInfo()
   },[user,character])
@@ -99,7 +100,7 @@ export default function page() {
 
   function combatHTML() {
     return (
-        <CombatEncounter location_id={selectedLocation} setCombat={setInCombat}/>
+        <CombatEncounter location_id={selectedLocation} setCombat={setInCombat} completion_map={character.world_completion}/>
     )
   }
 
