@@ -2,20 +2,13 @@ import { db } from '@/firebase/firebase'
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 
-type Props = {
-  location_img?: string
-  location_id?: string
-  style?: React.CSSProperties
-  progress?: number
-}
-
 type LocalLocation = {
   location_name: string
   challenges: number
   required_locations: string[]
 }
 
-export default function MapIcon({ location_img = "", location_id = '', style = {}, progress = 0 }: Props) {
+export default function MapIcon({ location_img = "", location_id = '', style = {}, completion_map = [] }) {
 
   const [locationData, setLocationData] = useState<LocalLocation>({
     location_name: 'Unknown',
@@ -24,9 +17,10 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
   })
 
   const [accessible,setAccessible] = useState(true)
-
+  const [progress,setProgress] = useState(0)
 
   useEffect(() => {
+    getProgress()
     getLocationData()
   },[])
 
@@ -49,6 +43,11 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
     } catch (e) {
       console.log(e)
     }
+  }
+
+  function getProgress() {
+    const locationCompletion = completion_map.find((item: { id: string; progress: number }) => item.id === location_id) || 0
+    setProgress(locationCompletion)
   }
 
   function getDisplay() {
