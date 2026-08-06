@@ -24,6 +24,36 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
     getLocationData()
   },[])
 
+  useEffect(() => {
+    updateAccessible()
+  },[locationData.required_locations])
+
+  // Check if neighbors are beaten, if not make this inaccessible
+  async function updateAccessible() {
+
+    // If there are no required locations, then set it to true always
+    if (locationData.required_locations.length <= 0) {
+      setAccessible(true)
+      return
+    }
+
+    for (const item of locationData.required_locations) {
+      const docRef = doc(db,"locations",item)
+      const docData = (await getDoc(docRef)).data()
+
+      if (!docData) {
+        continue
+      }
+
+      const completionReference = completion_map.find((i: { id: string; progress: number }) => i.id === item) || 0
+      // If at least one is beaten, then it may pass
+      if (completionReference >= docData.challenges) {
+        setAccessible(true)
+        return
+      }
+    }
+    setAccessible(false)
+  }
 
   async function getLocationData() {
 
@@ -51,7 +81,7 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
   }
 
   function getDisplay() {
-    if (accessible) return '[Inaccessible]'
+    if (!accessible) return '[Inaccessible]'
     return progress >= locationData.challenges ? '[Completed]' : '[Uncompleted]'
   }
 
