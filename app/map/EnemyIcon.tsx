@@ -5,12 +5,17 @@ import React from 'react'
 
 interface props {
   enemy: Enemy
-  nextRound: (param:any, param2:any) => void
+  nextRound: (param:any, param2:any) => void,
+  currentEnemy:Enemy|null
 }
 
-export default function EnemyIcon({enemy, nextRound}:props) {
+export default function EnemyIcon({enemy, nextRound, currentEnemy}:props) {
 
   const character:Character = useBoundStore((state:any) => state.character)
+
+  function isDead() {
+    return enemy.currentHP <= 0
+  }
 
   function displayAttack() {
 
@@ -46,11 +51,16 @@ export default function EnemyIcon({enemy, nextRound}:props) {
 
   return (
     <div className='enemy__wrapper'>
-        <div className="enemy__info">{enemy?.enemy_name}</div>
-        <img src={`/enemies/${enemy?.enemy_icon}`} alt="" />
-        <div className="enemy__info">HP:{enemy?.currentHP}/{enemy?.hp}</div>
-        <div className="enemy__info">Will deal <span className='red'>{displayAttack()} damage</span> next turn.</div>
-        <div className="btn red" onClick={() => nextRound(enemy,displayDamage())}>Attack - {displayDamage()} Damage</div>
+        <div className={`enemy__info ${isDead() ? "fade-out" : ""}`}>{enemy?.enemy_name}</div>
+        <img src={`/enemies/${enemy?.enemy_icon}`} alt="" className={`${isDead() ? "enemy-kill" : ""} ${currentEnemy === enemy? "enemy-attack" : ""}`}/>
+        <div className={`${isDead() ? "fade-out" : ""}`}>
+          <div className="enemy__info">HP:{enemy?.currentHP}/{enemy?.hp}</div>
+          <div className="enemy__info">Will deal <span className='red'>{displayAttack()} damage</span> next turn.</div>
+          <div className="btn red" 
+            onClick={(() => {if(!isDead()) nextRound(enemy,displayDamage())})}
+            >Attack - {displayDamage()} Damage
+          </div>
+        </div>
     </div>
   )
 }

@@ -107,7 +107,7 @@ export default function page() {
 
   function mapHTML() {
     return (
-        <div className="map__container">
+        <div className={`map__container ${inCombat ? "fade-out" : "fade-in"} ${!character.world_completion && "hidden"}`}>
             <div className="map__icons--wrapper">
                 <MapIcon style={{left:"16%", bottom:"10%"}} location_img="Norm.svg" location_id={"6rLKOYGrkkM1jhVhzCWl"} completion_map={character.world_completion} startCombat={startCombat}/>
                 <MapIcon style={{left:"24%", bottom:"42%"}} location_img="Grotto.svg" location_id={"67Uyu2sPLm8dI7OsgKCd"} completion_map={character.world_completion} startCombat={startCombat}/>
@@ -131,15 +131,15 @@ export default function page() {
   }
 
   return (
-    <>
-    {isDead && <DeathMessage setIsDead={setIsDead} deathMessage={deathMessage}/>}
-    <div className='map__header'>
-        <div className="map__header__text">dungeon diver.</div>
+    <div style={{backgroundColor:"#dbdbdb"}}>
+      {isDead && <DeathMessage setIsDead={setIsDead} deathMessage={deathMessage}/>}
+      <div className='map__header'>
+          <div className="map__header__text">dungeon diver.</div>
+      </div>
+      <div className='map__wrapper'>
+        <CharacterTab/>
+        {getHTML()}
+      </div>
     </div>
-    <div className='map__wrapper'>
-      <CharacterTab/>
-      {getHTML()}
-    </div>
-    </>
   )
 }

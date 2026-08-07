@@ -5,13 +5,15 @@ import { db } from "@/firebase/firebase";
 import { useBoundStore } from "@/zustand/zustand";
 import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
+
+  const slider = useRef<HTMLDivElement|null>(null)
 
   const setUser = useBoundStore((state:any) => state.setUser)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
@@ -45,7 +47,10 @@ export default function Home() {
           setUserInfo(userDoc.id,password,username,userData.character_id)
           setCharacterInfo(userData.character_id)
 
-          navigator.push("/map")
+          slider.current?.classList.add("slide-out")
+          setTimeout(() => {
+            navigator.push("/map")
+          },1000)
         } else {
           setErrorMessage("Login failed.")
         }
@@ -73,8 +78,11 @@ export default function Home() {
 
           setUserInfo(user.id,password,username,characterRef.id)
           setCharacterInfo(characterRef.id)
-
-          navigator.push("/character")
+          
+          slider.current?.classList.add("slide-out")
+          setTimeout(() => {
+            navigator.push("/character")
+          },1000)
         }
         catch (e) {
           setErrorMessage("Sign up failed.")
@@ -111,14 +119,16 @@ export default function Home() {
   return (
     <div className="container">
       <div className="login__wrapper fade-in">
-        <div className="login__header">dungeon diver.</div>
-        <div className="login__subtitle">log in / sign up</div>
-        <form className="login__form--wrapper">
-          <div className="login__error red">{errorMessage}</div>
-          <input className="login__form--input" type="text" placeholder="username" autoComplete="current-username" onChange={(e) => setUsername(e.target.value)}/>
-          <input className="login__form--input" type="password" placeholder="password" autoComplete="current-password" onChange={(e) => setPassword(e.target.value)}/>
-          <div className="btn" onClick={checkUsers}>play</div>
-        </form>
+        <div ref={slider}>
+          <div className="login__header">dungeon diver.</div>
+          <div className="login__subtitle">log in / sign up</div>
+          <form className="login__form--wrapper">
+            <div className="login__error red">{errorMessage}</div>
+            <input className="login__form--input" type="text" placeholder="username" autoComplete="current-username" onChange={(e) => setUsername(e.target.value)}/>
+            <input className="login__form--input" type="password" placeholder="password" autoComplete="current-password" onChange={(e) => setPassword(e.target.value)}/>
+            <div className="btn" onClick={checkUsers}>play</div>
+          </form>
+        </div>
       </div>
     </div>
   );

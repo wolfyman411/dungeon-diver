@@ -21,12 +21,33 @@ export default function CombatEncounter({location_id = "", endCombat, completion
   const [locationData,setLocationData] = useState({})
   const character:Character = useBoundStore((state:any) => state.character)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
+  const [currentEnemy,setCurrentEnemy] = useState<Enemy|null>(null)
 
   useEffect(() => {
     startCombat()
   },[])
 
-  function nextRound(targetedEnemy:Enemy, damage:number) {
+  async function endCombatHandler(newCharacter:Character, dead=false, enemy:Enemy = new Enemy("","","",0,0,0,0,0)) {
+    if (dead) {
+        newCharacter.hp = newCharacter.getLevel()
+        newCharacter.xp += failReward
+        setCharacter(newCharacter)
+        setDeathMessage(enemy.death_note)
+        endCombat(true)
+    }
+    else {
+        const ref = completion_map.find((item) => item.id === location_id);
+        if (ref) {
+            ref.progress += 1;
+        }
+        newCharacter.hp = newCharacter.getLevel()
+        newCharacter.xp += Math.floor(failReward * 1.5)
+        setCharacter(newCharacter)
+        endCombat(false)
+    }
+  }
+
+  async function nextRound(targetedEnemy:Enemy, damage:number) {
     const newCharacter = character.clone(character.id,character.world_completion)
 
 
@@ -41,36 +62,26 @@ export default function CombatEncounter({location_id = "", endCombat, completion
     for (let i  = 0; i < enemies.length; i++) {
         // Check if the enemy is alive, if so attack.
         if (enemies[i].currentHP > 0) {
-            const highestStat = enemies[i].highestStat()
-            newCharacter.hp -= newCharacter.getDamage(highestStat.type,highestStat.amount)
+            setTimeout(() => {
+                setCurrentEnemy(enemies[i])
+                const highestStat = enemies[i].highestStat()
+                newCharacter.hp -= newCharacter.getDamage(highestStat.type,highestStat.amount)
 
-            // If the player is dead, end combat and boot them back to the map. Give 15XP plus the difficulty
-            if (newCharacter.hp <= 0) {
-                newCharacter.hp = newCharacter.getLevel()
-                newCharacter.xp += failReward
-                setCharacter(newCharacter)
-                setDeathMessage(enemies[i].death_note)
-                endCombat(true)
-                return
-            }
+                // If the player is dead, end combat and boot them back to the map. Give 15XP plus the difficulty
+                if (newCharacter.hp <= 0) {
+                    endCombatHandler(newCharacter,true,enemies[i])
+                    return
+                }
+            },1000)
         }
     }
 
     // Filter array of dead enemies
     const refArray = enemies.filter((i) => i.currentHP > 0)
-    setEnemies(refArray)
 
     // If all enemies are dead, end combat, heal player, give bonus xp, and increase the completion (if not maxed)
     if (refArray.length <= 0) {
-        const ref = completion_map.find((item) => item.id === location_id);
-        if (ref) {
-            ref.progress += 1;
-        }
-        newCharacter.hp = newCharacter.getLevel()
-        newCharacter.xp += Math.floor(failReward * 1.5)
-        setCharacter(newCharacter)
-        endCombat(false)
-        console.log(completion_map)
+        endCombatHandler(newCharacter,false)
         return
     }
 
@@ -119,8 +130,8 @@ export default function CombatEncounter({location_id = "", endCombat, completion
   }
 
   return (
-    <div className="combat__container">
-        {!loading && enemies.map((enemy,index) => <EnemyIcon key={index} enemy={enemy} nextRound={nextRound}/>)}
+    <div className={`combat__container fade-in`}>
+        {!loading && enemies.map((enemy,index) => <EnemyIcon key={index} enemy={enemy} nextRound={nextRound} currentEnemy={currentEnemy}/>)}
     </div>
   )
 }

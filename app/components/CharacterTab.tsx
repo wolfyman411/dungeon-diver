@@ -61,7 +61,7 @@ export default function CharacterTab() {
   }
 
   return (
-    <div className="character__stats">
+    <div className={`character__stats left-right ${!character.class && "hidden"}`}>
         <div className="character__info">
             <div className="character__portrait">
                 <div className="box">
