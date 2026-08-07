@@ -55,7 +55,7 @@ export default function page() {
       return
     }
     const docRef = doc(db,"character",character.id)
-    setDoc(docRef,{muscle:character.muscle, magic:character.magic, moxie:character.moxie, xp:character.xp, wins:character.wins, world_completion:character.world_completion, hp:character.getLevel()}, {merge:true})
+    setDoc(docRef,{muscle:character.muscle, magic:character.magic, moxie:character.moxie, xp:character.xp, wins:character.wins, world_completion:character.world_completion || [], hp:character.getLevel()}, {merge:true})
   }
 
   async function updateMapInfo() {
@@ -66,7 +66,7 @@ export default function page() {
     console.log(character)
 
     // Create map progress
-    if (character.world_completion.length <= 0) {
+    if (!character.world_completion) {
       console.log("Build values")
       const locationsRef = collection(db,"locations")
       const locationsSnapshot = await getDocs(locationsRef)

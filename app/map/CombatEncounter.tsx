@@ -21,7 +21,6 @@ export default function CombatEncounter({location_id = "", endCombat, completion
   const [locationData,setLocationData] = useState({})
   const character:Character = useBoundStore((state:any) => state.character)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
-  const [currentEnemy,setCurrentEnemy] = useState<Enemy|null>(null)
   const [waiting,setWaiting] = useState(false)
 
   useEffect(() => {
@@ -63,17 +62,14 @@ export default function CombatEncounter({location_id = "", endCombat, completion
     for (let i  = 0; i < enemies.length; i++) {
         // Check if the enemy is alive, if so attack.
         if (enemies[i].currentHP > 0) {
-            setTimeout(() => {
-                setCurrentEnemy(enemies[i])
-                const highestStat = enemies[i].highestStat()
-                newCharacter.hp -= newCharacter.getDamage(highestStat.type,highestStat.amount)
+            const highestStat = enemies[i].highestStat()
+            newCharacter.hp -= newCharacter.getDamage(highestStat.type,highestStat.amount)
 
-                // If the player is dead, end combat and boot them back to the map. Give 15XP plus the difficulty
-                if (newCharacter.hp <= 0) {
-                    endCombatHandler(newCharacter,true,enemies[i])
-                    return
-                }
-            },500)
+            // If the player is dead, end combat and boot them back to the map. Give 15XP plus the difficulty
+            if (newCharacter.hp <= 0) {
+                endCombatHandler(newCharacter,true,enemies[i])
+                return
+            }
         }
     }
 
@@ -133,7 +129,7 @@ export default function CombatEncounter({location_id = "", endCombat, completion
 
   return (
     <div className={`combat__container fade-in`}>
-        {!loading && enemies.map((enemy,index) => <EnemyIcon key={index} enemy={enemy} nextRound={nextRound} currentEnemy={currentEnemy} waiting={waiting}/>)}
+        {!loading && enemies.map((enemy,index) => <EnemyIcon key={index} enemy={enemy} nextRound={nextRound} waiting={waiting}/>)}
     </div>
   )
 }
