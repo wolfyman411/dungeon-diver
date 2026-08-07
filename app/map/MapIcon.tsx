@@ -24,17 +24,33 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
     required_locations: []
   })
 
-  const [accessible,setAccessible] = useState(true)
+  const [accessible,setAccessible] = useState(false)
   const [progress,setProgress] = useState(0)
+  const[loading,setLoading] = useState(true)
 
   useEffect(() => {
-    getProgress()
-    getLocationData()
-  },[])
+    initIcon()
+  },[location_id,completion_map])
 
   useEffect(() => {
-    updateAccessible()
+    initState()
   },[locationData.required_locations])
+
+  async function initIcon() {
+    setLoading(true)
+
+    setAccessible(false)
+    await getLocationData()
+    await getProgress()
+
+    setLoading(false)
+  }
+
+  async function initState() {
+    setLoading(true)
+    await updateAccessible()
+    setLoading(false)
+  }
 
   // Check if neighbors are beaten, if not make this inaccessible
   async function updateAccessible() {
@@ -42,6 +58,11 @@ export default function MapIcon({ location_img = "", location_id = '', style = {
     // If there are no required locations, then set it to true always
     if (locationData.required_locations.length <= 0) {
       setAccessible(true)
+      return
+    }
+
+    if (!completion_map || completion_map.length <= 0) {
+      setAccessible(false)
       return
     }
 

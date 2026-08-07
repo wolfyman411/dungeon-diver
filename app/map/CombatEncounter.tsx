@@ -10,9 +10,11 @@ interface props {
     location_id:string,
     setCombat: (param:any) => void
     completion_map: Array<{id: string, progress: number}>,
+    setIsDead: (param:any) => void,
+    setDeathMessage: (param:any) => void,
 }
 
-export default function CombatEncounter({location_id = "", setCombat, completion_map}:props) {
+export default function CombatEncounter({location_id = "", setCombat, completion_map, setIsDead, setDeathMessage}:props) {
 
   const [enemies,setEnemies] = useState<Enemy[]>([])
   const [loading,setLoading] = useState(true)
@@ -28,6 +30,7 @@ export default function CombatEncounter({location_id = "", setCombat, completion
   function nextRound(targetedEnemy:Enemy, damage:number) {
     const newCharacter = character.clone(character.id,character.world_completion)
 
+
     // First the player will attack the enemy
     targetedEnemy.currentHP -= damage
     // If the enemy is dead, give the player some XP
@@ -37,25 +40,27 @@ export default function CombatEncounter({location_id = "", setCombat, completion
 
     // Next all the enemies will attack the player (going from left to right)
     for (let i  = 0; i < enemies.length; i++) {
-        // Check if the enemy is alive, if so attack
+        // Check if the enemy is alive, if so attack.
         if (enemies[i].currentHP > 0) {
             const highestStat = enemies[i].highestStat()
             newCharacter.hp -= newCharacter.getDamage(highestStat.type,highestStat.amount)
+
+            // If the player is dead, end combat and boot them back to the map. Give 15XP plus the difficulty
+            if (newCharacter.hp <= 0) {
+                newCharacter.hp = newCharacter.getLevel()
+                newCharacter.xp += failReward
+                setCharacter(newCharacter)
+                setCombat(false)
+                setIsDead(true)
+                setDeathMessage(enemies[i].death_note)
+                return
+            }
         }
     }
 
     // Filter array of dead enemies
     const refArray = enemies.filter((i) => i.currentHP > 0)
     setEnemies(refArray)
-
-    // If the player is dead, end combat and boot them back to the map. Give 15XP plus the difficulty
-    if (newCharacter.hp <= 0) {
-        newCharacter.hp = newCharacter.getLevel()
-        newCharacter.xp += failReward
-        setCharacter(newCharacter)
-        setCombat(false)
-        return
-    }
 
     // If all enemies are dead, end combat, heal player, and increase the completion (if not maxed)
     if (refArray.length <= 0) {

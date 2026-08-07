@@ -1,10 +1,8 @@
 "use client"
 
-import Image from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MapIcon from './MapIcon'
 import CharacterTab from '../components/CharacterTab'
-import EnemyIcon from './EnemyIcon'
 import { useBoundStore } from '@/zustand/zustand'
 import { User } from '@/classes/user'
 import { useRouter } from 'next/navigation'
@@ -12,9 +10,12 @@ import { Character } from '@/classes/character'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
 import CombatEncounter from './CombatEncounter'
+import DeathMessage from './DeathMessage'
 
 export default function page() {
 
+  const [deathMessage, setDeathMessage] = useState("")
+  const [isDead, setIsDead] = useState(false)
   const [inCombat, setInCombat] = useState(false)
   const [selectedLocation, setSelectedLocation] = useState("")
   const user:User = useBoundStore((state:any) => state.user)
@@ -100,12 +101,13 @@ export default function page() {
 
   function combatHTML() {
     return (
-        <CombatEncounter location_id={selectedLocation} setCombat={setInCombat} completion_map={character.world_completion}/>
+        <CombatEncounter location_id={selectedLocation} setCombat={setInCombat} completion_map={character.world_completion} setIsDead={setIsDead} setDeathMessage={setDeathMessage}/>
     )
   }
 
   return (
     <>
+    {isDead && <DeathMessage setIsDead={setIsDead} deathMessage={deathMessage}/>}
     <div className='map__header'>
         <div className="map__header__text">dungeon diver.</div>
     </div>
