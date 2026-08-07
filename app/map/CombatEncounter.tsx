@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import EnemyIcon from './EnemyIcon'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
@@ -22,6 +22,7 @@ export default function CombatEncounter({location_id = "", endCombat, completion
   const character:Character = useBoundStore((state:any) => state.character)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
   const [waiting,setWaiting] = useState(false)
+  const enemyHtmlRef = useRef<HTMLDivElement|null>(null)
 
   useEffect(() => {
     startCombat()
@@ -64,6 +65,17 @@ export default function CombatEncounter({location_id = "", endCombat, completion
         if (enemies[i].currentHP > 0) {
             const highestStat = enemies[i].highestStat()
             newCharacter.hp -= newCharacter.getDamage(highestStat.type,highestStat.amount)
+
+            // Play attack animation
+            if (enemyHtmlRef.current) {
+                const htmlRef = enemyHtmlRef.current?.children[i].children[1] //image
+                htmlRef.classList.remove("enemy-attack")
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        htmlRef.classList.add("enemy-attack");
+                    });
+                });
+            }
 
             // If the player is dead, end combat and boot them back to the map. Give 15XP plus the difficulty
             if (newCharacter.hp <= 0) {
@@ -128,7 +140,7 @@ export default function CombatEncounter({location_id = "", endCombat, completion
   }
 
   return (
-    <div className={`combat__container fade-in`}>
+    <div className={`combat__container fade-in`} ref={enemyHtmlRef}>
         {!loading && enemies.map((enemy,index) => <EnemyIcon key={index} enemy={enemy} nextRound={nextRound} waiting={waiting}/>)}
     </div>
   )
