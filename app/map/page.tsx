@@ -25,9 +25,9 @@ export default function page() {
   const navigator = useRouter()
 
   useEffect(() => {
-    console.log(character)
     logicCheck()
     updateMapInfo()
+    updatePlayerInfo()
   },[user,character])
 
   function startCombat(location_id = "") {
@@ -35,13 +35,38 @@ export default function page() {
     setSelectedLocation(location_id)
   }
 
+  async function endCombat(dead=false) {
+
+    console.log(dead)
+
+    setIsDead(dead)
+    setInCombat(false)
+
+    // Check if location is last location and not dead
+    if (!dead && selectedLocation === "Rw4dI8JsQXkZiH7eFPqZ") {
+      navigator.push("/ending")
+    }
+
+    setSelectedLocation("")
+  }
+
+  async function updatePlayerInfo() {
+    if (!character.id) {
+      return
+    }
+    const docRef = doc(db,"character",character.id)
+    setDoc(docRef,{muscle:character.muscle, magic:character.magic, moxie:character.moxie, xp:character.xp, wins:character.wins, world_completion:character.world_completion, hp:character.getLevel()}, {merge:true})
+  }
+
   async function updateMapInfo() {
     if (!user.character_id || !character.class) {
       return
     }
 
+    console.log(character)
+
     // Create map progress
-    if (character.world_completion.values.length < 0) {
+    if (character.world_completion.length <= 0) {
       console.log("Build values")
       const locationsRef = collection(db,"locations")
       const locationsSnapshot = await getDocs(locationsRef)
@@ -101,7 +126,7 @@ export default function page() {
 
   function combatHTML() {
     return (
-        <CombatEncounter location_id={selectedLocation} setCombat={setInCombat} completion_map={character.world_completion} setIsDead={setIsDead} setDeathMessage={setDeathMessage}/>
+        <CombatEncounter location_id={selectedLocation} endCombat={endCombat} completion_map={character.world_completion} setDeathMessage={setDeathMessage}/>
     )
   }
 

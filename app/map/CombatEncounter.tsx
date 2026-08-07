@@ -8,13 +8,12 @@ import { useBoundStore } from '@/zustand/zustand'
 
 interface props {
     location_id:string,
-    setCombat: (param:any) => void
+    endCombat: (param:any) => void
     completion_map: Array<{id: string, progress: number}>,
-    setIsDead: (param:any) => void,
     setDeathMessage: (param:any) => void,
 }
 
-export default function CombatEncounter({location_id = "", setCombat, completion_map, setIsDead, setDeathMessage}:props) {
+export default function CombatEncounter({location_id = "", endCombat, completion_map, setDeathMessage}:props) {
 
   const [enemies,setEnemies] = useState<Enemy[]>([])
   const [loading,setLoading] = useState(true)
@@ -50,9 +49,8 @@ export default function CombatEncounter({location_id = "", setCombat, completion
                 newCharacter.hp = newCharacter.getLevel()
                 newCharacter.xp += failReward
                 setCharacter(newCharacter)
-                setCombat(false)
-                setIsDead(true)
                 setDeathMessage(enemies[i].death_note)
+                endCombat(true)
                 return
             }
         }
@@ -62,15 +60,16 @@ export default function CombatEncounter({location_id = "", setCombat, completion
     const refArray = enemies.filter((i) => i.currentHP > 0)
     setEnemies(refArray)
 
-    // If all enemies are dead, end combat, heal player, and increase the completion (if not maxed)
+    // If all enemies are dead, end combat, heal player, give bonus xp, and increase the completion (if not maxed)
     if (refArray.length <= 0) {
         const ref = completion_map.find((item) => item.id === location_id);
         if (ref) {
             ref.progress += 1;
         }
         newCharacter.hp = newCharacter.getLevel()
+        newCharacter.xp += Math.floor(failReward * 1.5)
         setCharacter(newCharacter)
-        setCombat(false)
+        endCombat(false)
         console.log(completion_map)
         return
     }
@@ -90,7 +89,7 @@ export default function CombatEncounter({location_id = "", setCombat, completion
     if (docData) {
         setLocationData(docData)
 
-        const difficultyRating = docData.challenge + character.wins
+        const difficultyRating = docData.challenge + (character.wins*1.2)
         // Update fail reward
         setFailReward(Math.floor(difficultyRating * 15))
 

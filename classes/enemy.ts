@@ -27,12 +27,12 @@ export class Enemy {
     }
 
     levelUp(rating:number) {
-        this.hp = Math.floor(this.hp*rating)
+        this.hp = Math.floor(this.hp+rating)
         this.currentHP = this.hp
-        this.muscle = Math.floor(this.muscle*rating)
-        this.magic = Math.floor(this.magic*rating)
-        this.moxie = Math.floor(this.moxie*rating)
-        this.reward = Math.floor(this.reward*rating)
+        this.muscle = Math.floor(this.muscle*rating)+Math.floor(rating)
+        this.magic = Math.floor(this.magic*rating)+Math.floor(rating)
+        this.moxie = Math.floor(this.moxie*rating)+Math.floor(rating)
+        this.reward = Math.floor(this.reward*rating)+Math.floor(rating*2)
     }
 
     highestStat():{type:string,amount:number} {

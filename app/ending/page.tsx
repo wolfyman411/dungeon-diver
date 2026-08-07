@@ -1,5 +1,6 @@
 "use client"
 
+import { Character } from '@/classes/character'
 import { User } from '@/classes/user'
 import { useBoundStore } from '@/zustand/zustand'
 import { useRouter } from 'next/navigation'
@@ -9,6 +10,8 @@ export default function page() {
 
   const user:User = useBoundStore((state:any) => state.user)
   const navigator = useRouter()
+  const character:Character = useBoundStore((state:any) => state.character)
+  const setCharacter = useBoundStore((state:any) => state.setCharacter)
 
   useEffect(() => {
     logicCheck()
@@ -16,8 +19,27 @@ export default function page() {
 
   function logicCheck() {
     if (!user.id) {
-        navigator.push("/")
+      navigator.push("/")
     }
+
+    // Additional check to ensure the player has beaten the game
+    if (character.world_completion && character.world_completion.length > 0) {
+      const completionReference = character.world_completion.find((i) => i.id === "Rw4dI8JsQXkZiH7eFPqZ")?.progress || 0
+      if (completionReference <= 0) {
+        navigator.push("/")
+      }
+    }
+    else {
+      navigator.push("/")
+    }
+  }
+
+  function resetGame() {
+    const newCharacter = character.clone(character.id,character.world_completion)
+    newCharacter.wins += 1
+    newCharacter.world_completion = []
+    setCharacter(newCharacter)
+    navigator.push("/map")
   }
 
   return (
@@ -35,7 +57,7 @@ export default function page() {
                 A purple beam of energy blasts into the sky from the fortress, causing all of the Necromancer’s minions to grow stronger. I guess 2nd time’s the charm right?
             </div>
             <div className="info__section">
-                <button className='btn'>Here we go again...</button>
+                <button className='btn' onClick={resetGame}>Here we go again...</button>
             </div>
         </div>
       </div>

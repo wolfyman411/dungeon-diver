@@ -2,6 +2,7 @@ import { Character } from '@/classes/character'
 import { User } from '@/classes/user'
 import { useBoundStore } from '@/zustand/zustand'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function CharacterTab() {
@@ -9,6 +10,9 @@ export default function CharacterTab() {
   const character:Character = useBoundStore((state:any) => state.character)
   const user:User = useBoundStore((state:any) => state.user)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
+  const setUser = useBoundStore((state:any) => state.setUser)
+
+  const navigator = useRouter()
 
   function getCharacterArt() {
 
@@ -50,6 +54,12 @@ export default function CharacterTab() {
     }
   }
 
+  function quit() {
+    setCharacter(undefined)
+    setUser(undefined)
+    navigator.push("/")
+  }
+
   return (
     <div className="character__stats">
         <div className="character__info">
@@ -86,7 +96,7 @@ export default function CharacterTab() {
                 <div className="skill__button">+</div>
             </div>
         </div>
-        <div className="btn">quit</div>
+        <div className="btn" onClick={quit}>quit</div>
         <div className="btn red">delete account</div>
         </div>
   )
