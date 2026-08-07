@@ -1,5 +1,5 @@
 export class User {
-    id: string = "";
+    id: string|null = "";
     password: string;
     username: string;
     character_id: string;

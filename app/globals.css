@@ -336,6 +336,12 @@
     justify-content: center;
     position: absolute;
     aspect-ratio: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.map__icon--wrapper img {
 }
 
 .map__icon--wrapper {

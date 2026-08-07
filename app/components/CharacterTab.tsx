@@ -55,8 +55,13 @@ export default function CharacterTab() {
   }
 
   function quit() {
-    setCharacter(undefined)
-    setUser(undefined)
+
+    // Jank solution, but prevents errors
+    const newUser = new User("","","")
+    newUser.id = null
+    setUser(newUser)
+
+
     navigator.push("/")
   }
 

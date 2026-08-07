@@ -109,16 +109,16 @@ export default function page() {
     return (
         <div className={`map__container ${inCombat ? "fade-out" : "fade-in"} ${!character.world_completion && "hidden"}`}>
             <div className="map__icons--wrapper">
-                <MapIcon style={{left:"16%", bottom:"10%"}} location_img="Norm.svg" location_id={"6rLKOYGrkkM1jhVhzCWl"} completion_map={character.world_completion} startCombat={startCombat}/>
-                <MapIcon style={{left:"24%", bottom:"42%"}} location_img="Grotto.svg" location_id={"67Uyu2sPLm8dI7OsgKCd"} completion_map={character.world_completion} startCombat={startCombat}/>
-                <MapIcon style={{left:"40%", bottom:"24%"}} location_img="Swamp.svg" location_id={"Petks536iahPkO5wWD2L"} completion_map={character.world_completion} startCombat={startCombat}/>
+                <MapIcon style={{left:"16%", top:"12%"}} location_img="Norm.svg" location_id={"6rLKOYGrkkM1jhVhzCWl"} completion_map={character.world_completion} startCombat={startCombat}/>
+                <MapIcon style={{left:"24%", top:"42%"}} location_img="Grotto.svg" location_id={"67Uyu2sPLm8dI7OsgKCd"} completion_map={character.world_completion} startCombat={startCombat}/>
+                <MapIcon style={{left:"40%", top:"24%"}} location_img="Swamp.svg" location_id={"Petks536iahPkO5wWD2L"} completion_map={character.world_completion} startCombat={startCombat}/>
                 <MapIcon style={{}} location_img="Walls.svg" location_id={"J6MvGJY9sdzZu9zD5JhA"} completion_map={character.world_completion} startCombat={startCombat}/>
-                <MapIcon style={{left:"62%", bottom:"66%"}} location_img="Fortress.svg" location_id={"Rw4dI8JsQXkZiH7eFPqZ"} completion_map={character.world_completion} startCombat={startCombat}/>
-                <img style={{left:"20%", bottom:"22%"}} src={"/mapicons/Norm-Grotto.svg"} className='map__icon--path'/>
-                <img style={{left:"26%", bottom:"18%"}} src={"/mapicons/Norm-Swamp.svg"} className='map__icon--path'/>
-                <img style={{left:"48%", bottom:"36%"}} src={"/mapicons/Swamp-Walls.svg"} className='map__icon--path'/>
-                <img style={{left:"34%", bottom:"50%"}} src={"/mapicons/Grotto-Walls.svg"} className='map__icon--path'/>
-                <img style={{left:"56%", bottom:"56%"}} src={"/mapicons/Walls-Fortress.svg"} className='map__icon--path'/>
+                <MapIcon style={{left:"62%", top:"66%"}} location_img="Fortress.svg" location_id={"Rw4dI8JsQXkZiH7eFPqZ"} completion_map={character.world_completion} startCombat={startCombat}/>
+                <img style={{left:"20%", top:"22%"}} src={"/mapicons/Norm-Grotto.svg"} className='map__icon--path'/>
+                <img style={{left:"26%", top:"18%"}} src={"/mapicons/Norm-Swamp.svg"} className='map__icon--path'/>
+                <img style={{left:"48%", top:"36%"}} src={"/mapicons/Swamp-Walls.svg"} className='map__icon--path'/>
+                <img style={{left:"34%", top:"50%"}} src={"/mapicons/Grotto-Walls.svg"} className='map__icon--path'/>
+                <img style={{left:"56%", top:"56%"}} src={"/mapicons/Walls-Fortress.svg"} className='map__icon--path'/>
             </div>
         </div>
     )

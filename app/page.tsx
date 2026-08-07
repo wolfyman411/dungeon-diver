@@ -17,10 +17,23 @@ export default function Home() {
 
   const setUser = useBoundStore((state:any) => state.setUser)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
+  const character:Character = useBoundStore((state:any) => state.character)
+  const user:User = useBoundStore((state:any) => state.user)
 
   const navigator = useRouter()
 
   useEffect(() => {
+    // Update both the user and the class, rebuilding their classes
+    if (character.class && user.id !== null) {
+      const newUser = new User(user.password,user.username,user.character_id)
+      newUser.id = user.id
+      const newCharacter = new Character(character.class,character.hp,character.magic,character.moxie,character.muscle,character.wins,character.xp)
+      newCharacter.id = character.id
+      newCharacter.world_completion = character.world_completion
+      setCharacter(newCharacter)
+      setUser(newUser)
+      navigator.push("/map")
+    }
   }, []);
 
   async function checkUsers() {
