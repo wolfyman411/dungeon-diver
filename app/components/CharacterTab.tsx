@@ -75,8 +75,7 @@ export default function CharacterTab() {
         </div>
         <div className="character__info">
             <div className="character__core">
-                HP: {character.hp || 0}/{character.class && character.getLevel() || 0}
-                XP: {character.xp || 0}
+                HP: {character.hp || 0}/{character.class && character.getLevel() || 0} XP: {character.xp || 0}
             </div>
         </div>
         <div className="character__skills">
