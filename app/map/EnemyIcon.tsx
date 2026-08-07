@@ -6,10 +6,11 @@ import React from 'react'
 interface props {
   enemy: Enemy
   nextRound: (param:any, param2:any) => void,
-  currentEnemy:Enemy|null
+  currentEnemy:Enemy|null,
+  waiting:boolean
 }
 
-export default function EnemyIcon({enemy, nextRound, currentEnemy}:props) {
+export default function EnemyIcon({enemy, nextRound, currentEnemy, waiting}:props) {
 
   const character:Character = useBoundStore((state:any) => state.character)
 
@@ -56,8 +57,8 @@ export default function EnemyIcon({enemy, nextRound, currentEnemy}:props) {
         <div className={`${isDead() ? "fade-out" : ""}`}>
           <div className="enemy__info">HP:{enemy?.currentHP}/{enemy?.hp}</div>
           <div className="enemy__info">Will deal <span className='red'>{displayAttack()} damage</span> next turn.</div>
-          <div className="btn red" 
-            onClick={(() => {if(!isDead()) nextRound(enemy,displayDamage())})}
+          <div className={`btn red ${waiting ? "disabled" : ""}`}
+            onClick={(() => {if(!isDead() || waiting) nextRound(enemy,displayDamage())})}
             >Attack - {displayDamage()} Damage
           </div>
         </div>

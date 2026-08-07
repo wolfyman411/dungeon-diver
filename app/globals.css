@@ -272,6 +272,11 @@
     max-width: 150px;
 }
 
+.btn.disabled {
+    filter: brightness(0.7) !important;
+    cursor: not-allowed !important;
+}
+
 /* INFO */
 
 .info__text {

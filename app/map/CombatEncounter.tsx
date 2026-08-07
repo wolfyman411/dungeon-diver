@@ -22,6 +22,7 @@ export default function CombatEncounter({location_id = "", endCombat, completion
   const character:Character = useBoundStore((state:any) => state.character)
   const setCharacter = useBoundStore((state:any) => state.setCharacter)
   const [currentEnemy,setCurrentEnemy] = useState<Enemy|null>(null)
+  const [waiting,setWaiting] = useState(false)
 
   useEffect(() => {
     startCombat()
@@ -49,7 +50,7 @@ export default function CombatEncounter({location_id = "", endCombat, completion
 
   async function nextRound(targetedEnemy:Enemy, damage:number) {
     const newCharacter = character.clone(character.id,character.world_completion)
-
+    setWaiting(true)
 
     // First the player will attack the enemy
     targetedEnemy.currentHP -= damage
@@ -72,7 +73,7 @@ export default function CombatEncounter({location_id = "", endCombat, completion
                     endCombatHandler(newCharacter,true,enemies[i])
                     return
                 }
-            },1000)
+            },500)
         }
     }
 
@@ -86,6 +87,7 @@ export default function CombatEncounter({location_id = "", endCombat, completion
     }
 
     setCharacter(newCharacter)
+    setWaiting(false)
   }
 
   async function startCombat() {
@@ -131,7 +133,7 @@ export default function CombatEncounter({location_id = "", endCombat, completion
 
   return (
     <div className={`combat__container fade-in`}>
-        {!loading && enemies.map((enemy,index) => <EnemyIcon key={index} enemy={enemy} nextRound={nextRound} currentEnemy={currentEnemy}/>)}
+        {!loading && enemies.map((enemy,index) => <EnemyIcon key={index} enemy={enemy} nextRound={nextRound} currentEnemy={currentEnemy} waiting={waiting}/>)}
     </div>
   )
 }
