@@ -51,7 +51,7 @@ export default function page() {
   }
 
   async function updatePlayerInfo() {
-    if (!character.id) {
+    if (!character.id || !user.id) {
       return
     }
     const docRef = doc(db,"character",character.id)

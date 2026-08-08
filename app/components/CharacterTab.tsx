@@ -1,6 +1,8 @@
 import { Character } from '@/classes/character'
 import { User } from '@/classes/user'
+import { db } from '@/firebase/firebase'
 import { useBoundStore } from '@/zustand/zustand'
+import { deleteDoc, doc } from 'firebase/firestore'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -65,6 +67,19 @@ export default function CharacterTab() {
     navigator.push("/")
   }
 
+  async function deleteAccount() {
+
+    // Delete character and user
+    await deleteDoc(doc(db,"users",user.id || ""))
+    await deleteDoc(doc(db,"character",character.id))
+
+    // Jank solution, but prevents errors
+    const newUser = new User("","","")
+    newUser.id = null
+    setUser(newUser)
+    navigator.push("/")
+  }
+
   return (
     <div className={`character__stats left-right ${!character.class && "hidden"}`}>
         <div className="character__info">
@@ -101,7 +116,7 @@ export default function CharacterTab() {
             </div>
         </div>
         <div className="btn" onClick={quit}>quit</div>
-        <div className="btn red">delete account</div>
+        <div className="btn red" onClick={deleteAccount}>delete account</div>
         </div>
   )
 }
